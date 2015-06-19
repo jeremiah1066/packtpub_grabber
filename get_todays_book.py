@@ -40,7 +40,6 @@ def get_todays_title():
         raise Exception("Unable to fetch todays title")
 
 
-# TODO need to figure out how to verify login
 def login_and_request_book(get_url):
     sess = requests.Session()
     payload = {
