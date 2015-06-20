@@ -9,10 +9,10 @@ After you copy this file, enter the appropriate into in config.json.
 
 Then run main.py `python main.py`. 
 
-I am running this on centos 7.1 and needed to do the following
-`yum install gcc`
-`yum install python-devel`
-`yum install libffi-devel`
-`yum install openssl-devel`
+I am running this on centos 7.1 and needed to do the following:
+*`yum install gcc`
+*`yum install python-devel`
+*`yum install libffi-devel`
+*`yum install openssl-devel`
 
 Working on making this a running daemon.
