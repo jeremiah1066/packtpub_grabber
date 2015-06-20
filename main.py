@@ -10,7 +10,6 @@ import time
 import get_todays_book
 
 
-
 logging.basicConfig(level=logging.INFO,
                     filename='packetpub_grabber.log',
                     format='%(asctime)s - %(levelname)s: %(message)s')
