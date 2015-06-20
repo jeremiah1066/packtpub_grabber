@@ -1,5 +1,4 @@
 import json
-import logging
 import requests
 import sys
 
@@ -23,13 +22,8 @@ def make_pushover_call(message, title="Today's Packet Pub book."):
         "user": config['pushover_user'],
         "device": config.get('pushover_device', None),
         "message": str(message),
-
+        "title": title
     }
     pushover_push = requests.post("https://api.pushover.net/1/messages.json", data=data)
     pushover_push.raise_for_status()
     return True
-
-
-
-
-

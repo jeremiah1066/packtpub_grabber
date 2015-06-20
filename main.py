@@ -3,7 +3,6 @@ import datetime
 import logging
 import pickle
 import sqlite3
-import os
 from requests import HTTPError
 import sys
 import time
@@ -19,7 +18,7 @@ logging.basicConfig(level=logging.INFO,
 
 def get_tomorrow():
     return datetime.datetime.replace(datetime.datetime.utcnow() + datetime.timedelta(days=1),
-                                                hour=0, minute=0, second=0)
+                                     hour=0, minute=0, second=0)
 
 
 def sleep_till_tomorrow():
@@ -119,7 +118,3 @@ def check_last_book():
 
 if __name__ == "__main__":
     check_last_book()
-
-
-
-
