@@ -35,16 +35,33 @@ def get_last_book():
         sql_result = c.execute("SELECT * FROM last_book ORDER BY ID DESC LIMIT 1;")
         return sql_result.fetchone()
     except sqlite3.OperationalError:
-        c.execute("CREATE TABLE last_book (id integer primary key autoincrement, title text, date blob)")
+        c.execute("CREATE TABLE last_book (id integer primary key autoincrement,nid integer, title text, date blob)")
         get_last_book()
 
 
 def write_book_to_sql(book_data):
     with sqlite3.connect('get_book.db') as conn:
         c = conn.cursor()
-        c.execute("INSERT INTO last_book (title, date) VALUES (?, ?)", (book_data['title'], pickle.dumps(datetime.datetime.utcnow().date())))
+        c.execute("INSERT INTO last_book (title, nid, date) VALUES (?, ?, ?)", (book_data['title'], book_data['nid'], pickle.dumps(datetime.datetime.utcnow().date())))
         conn.commit()
         logging.info("Grabbed {0} at {1}".format(book_data['title'], datetime.datetime.utcnow().ctime()))
+
+
+def check_book_or_retry(book_sess, retrys=0):
+    if retrys == 3:
+        logging.error("Unbale to fetch book. We have reached max attempts. Bailing out.")
+        sys.exit()
+    my_last_book = get_todays_book.verify_todays_book(book_sess)
+    if not my_last_book:
+        logging.fatal("Email or Password appears invalid! Cannot continue. Exiting.")
+        sys.exit()
+    id, nid, title, date = get_last_book()
+    if nid != my_last_book['nid']:
+        logging.error("Book '{0}' with id {1} was not fetched on {2}. Trying again.".format(title, nid, date))
+        retrys += 1
+        check_book_or_retry(book_sess, retrys=retrys)
+    logging.info("Todays book '{0}' was verified".format(title))
+    return True
 
 
 def check_last_book():
@@ -62,11 +79,13 @@ def check_last_book():
     today_utc = datetime.datetime.utcnow().date()
     id, title, date = last_book
     last_book_get = pickle.loads(date)
+    # If todays book has already been grabbed
     if last_book_get == today_utc and todays_book['title'] == title:
         logging.info("Today's book \"{0}\", as already grabbed. "
                      "Sleeping till {1}".format(todays_book['title'].encode('utf-8', 'ignore'),
                      str(get_tomorrow().ctime())))
         sleep_till_tomorrow()
+    # If we have the date the same as the last grab, but the title is differnt, we try to grab the book
     elif last_book_get == today_utc and todays_book['title'] != title:
         book_get = get_todays_book.login_and_request_book(todays_book['url'])
         if not book_get:
@@ -74,6 +93,7 @@ def check_last_book():
             return False
         write_book_to_sql(todays_book)
         sleep_till_tomorrow()
+    # This is where we should end up for everyday
     else:
         try:
             book_get = get_todays_book.login_and_request_book(todays_book['url'])
@@ -84,7 +104,9 @@ def check_last_book():
             logging.error("Error getting todays book!")
             return False
         write_book_to_sql(todays_book)
+        check_book_or_retry(book_get)
         sleep_till_tomorrow()
+
 
 if __name__ == "__main__":
     check_last_book()
