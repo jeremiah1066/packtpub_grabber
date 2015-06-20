@@ -4,10 +4,12 @@ import logging
 import pickle
 import sqlite3
 import os
+from requests import HTTPError
 import sys
 import time
 
 import get_todays_book
+import pushover_notifications
 
 
 logging.basicConfig(level=logging.INFO,
@@ -50,6 +52,10 @@ def write_book_to_sql(book_data):
 def check_book_or_retry(book_sess, retrys=0):
     if retrys == 3:
         logging.error("Unbale to fetch book. We have reached max attempts. Bailing out.")
+        try:
+            pushover_notifications.make_pushover_call("Error getting today's book. Please check this out.")
+        except HTTPError:
+            logging.error("Pushover notificaion not working as expected.")
         sys.exit()
     my_last_book = get_todays_book.verify_todays_book(book_sess)
     if not my_last_book:
@@ -103,6 +109,11 @@ def check_last_book():
             return False
         write_book_to_sql(todays_book)
         check_book_or_retry(book_get)
+        logging.info("{0} grabbed on {1}.".format(title, date))
+        try:
+            pushover_notifications.make_pushover_call("Todays book is '{0}'. Enjoy!".format(title))
+        except HTTPError:
+            logging.error("Pushover notificaion not working as expected.")
         sleep_till_tomorrow()
 
 
