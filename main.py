@@ -23,6 +23,7 @@ def get_tomorrow():
 def sleep_till_tomorrow():
     tomorrow = get_tomorrow()
     delta = tomorrow - datetime.datetime.utcnow()
+    logging.info("Sleeping till {0}".format(tomorrow.ctime()))
     time.sleep(delta.seconds)
     return
 
@@ -76,13 +77,11 @@ def check_last_book():
         sleep_till_tomorrow()
 
     today_utc = datetime.datetime.utcnow().date()
-    id, title, date = last_book
+    id, nid, title, date = last_book
     last_book_get = pickle.loads(date)
     # If todays book has already been grabbed
     if last_book_get == today_utc and todays_book['title'] == title:
-        logging.info("Today's book \"{0}\", as already grabbed. "
-                     "Sleeping till {1}".format(todays_book['title'].encode('utf-8', 'ignore'),
-                     str(get_tomorrow().ctime())))
+        logging.info("Today's book \"{0}\", as already grabbed.".format(todays_book['title'].encode('utf-8', 'ignore'),))
         sleep_till_tomorrow()
     # If we have the date the same as the last grab, but the title is differnt, we try to grab the book
     elif last_book_get == today_utc and todays_book['title'] != title:
