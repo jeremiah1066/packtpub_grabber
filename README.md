@@ -7,7 +7,7 @@ Copy config_example.json as config.json.
 On Linux or Mac use `cp config_example.json config.json`. Not sure on windows. 
 After you copy this file, enter the appropriate into in config.json.
 
-Then run main.py `python main.py`. 
+Then run main.py `python main.py` or use something like supervisord to run it as daemon. 
 
 I am running this on centos 7.1 and needed to do the following:
 * `yum install gcc`
@@ -15,4 +15,5 @@ I am running this on centos 7.1 and needed to do the following:
 * `yum install libffi-devel`
 * `yum install openssl-devel`
 
-Working on making this a running daemon.
+# Pushover
+Pushover integration has been added so that you can get a daily push notificaiton when a new book is grabbed. This will not oly allow you to make sure it is still working, but also lets you see if todays book is worth reading without having to login to packetPub. 
