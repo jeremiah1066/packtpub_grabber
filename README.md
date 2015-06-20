@@ -7,7 +7,7 @@ Copy config_example.json as config.json.
 On Linux or Mac use `cp config_example.json config.json`. Not sure on windows. 
 After you copy this file, enter the appropriate into in config.json.
 
-Then run main.py `python main.py` or use something like supervisord to run it as daemon. 
+Then run main.py `python main.py &` to run it in the background or use something like supervisord to run it as daemon. 
 
 I am running this on centos 7.1 and needed to do the following:
 * `yum install gcc`
