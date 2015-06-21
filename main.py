@@ -61,8 +61,8 @@ def check_book_or_retry(book_sess, retrys=0):
         logging.fatal("Email or Password appears invalid! Cannot continue. Exiting.")
         sys.exit()
     id, nid, title, date = get_last_book()
-    if nid != my_last_book['nid']:
-        logging.error("Book '{0}' with id {1} was not fetched on {2}. Trying again.".format(title, nid, date))
+    if nid != int(my_last_book['nid']):
+        logging.error("Book '{0}' with id {1} was not fetched on {2}. Trying again.".format(title, nid, pickle.loads(date)))
         retrys += 1
         check_book_or_retry(book_sess, retrys=retrys)
     logging.info("Todays book '{0}' was verified".format(title))
