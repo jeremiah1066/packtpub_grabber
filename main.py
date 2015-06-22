@@ -60,9 +60,12 @@ def check_book_or_retry(book_sess, retrys=0):
     if not my_last_book:
         logging.fatal("Email or Password appears invalid! Cannot continue. Exiting.")
         sys.exit()
-    id, nid, title, date = get_last_book()
+    book_id, nid, title, date = get_last_book()
     if nid != int(my_last_book['nid']):
-        logging.error("Book '{0}' with id {1} was not fetched on {2}. Trying again.".format(title, nid, pickle.loads(date)))
+        logging.error("Book '{0}' with id {1} was not fetched on {2}. Trying again.".format(title, nid,
+                                                                                            pickle.loads(date)))
+        logging.error("{0} of type {1} is not equal to {2} of {3} type.".format(nid, type(nid), my_last_book['nid'],
+                                                                                type(my_last_book['nid'])))
         retrys += 1
         check_book_or_retry(book_sess, retrys=retrys)
     logging.info("Todays book '{0}' was verified".format(title))
@@ -82,7 +85,7 @@ def check_last_book():
         sleep_till_tomorrow()
 
     today_utc = datetime.datetime.utcnow().date()
-    id, nid, title, date = last_book
+    book_id, nid, title, date = last_book
     last_book_get = pickle.loads(date)
     # If todays book has already been grabbed
     if last_book_get == today_utc and todays_book['title'] == title:
