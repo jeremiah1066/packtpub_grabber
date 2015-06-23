@@ -10,6 +10,7 @@ except IOError:
     sys.exit()
 try:
     config['pushover_token'] and config['pushover_user']
+    push_over = True
 except KeyError:
     push_over = False
 
