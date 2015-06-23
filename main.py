@@ -60,10 +60,11 @@ def check_book_or_retry(book_sess, retrys=0):
     if not my_last_book:
         logging.fatal("Email or Password appears invalid! Cannot continue. Exiting.")
         sys.exit()
+    import ipdb; ipdb.set_trace()
     book_id, nid, title, date = get_last_book()
     if nid != int(my_last_book['nid']):
         logging.error("Book '{0}' with id {1} was not fetched on {2}. Trying again.".format(title, nid,
-                                                                                            pickle.loads(date)))
+                                                                                            pickle.loads(date).ctime()))
         logging.error("{0} of type {1} is not equal to {2} of {3} type.".format(nid, type(nid), my_last_book['nid'],
                                                                                 type(my_last_book['nid'])))
         retrys += 1
