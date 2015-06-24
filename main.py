@@ -60,7 +60,6 @@ def check_book_or_retry(book_sess, retrys=0):
     if not my_last_book:
         logging.fatal("Email or Password appears invalid! Cannot continue. Exiting.")
         sys.exit()
-    import ipdb; ipdb.set_trace()
     book_id, nid, title, date = get_last_book()
     if nid != int(my_last_book['nid']):
         logging.error("Book '{0}' with id {1} was not fetched on {2}. Trying again.".format(title, nid,
