@@ -112,7 +112,7 @@ def check_last_book():
     check_book_or_retry(book_get)
     logging.info("{0} grabbed on {1}.".format(title, date))
     try:
-        pushover_notifications.make_pushover_call("Todays book is '{0}'. Enjoy!".format(title))
+        pushover_notifications.make_pushover_call("'{0}'. Enjoy!".format(title))
     except HTTPError:
         logging.error("Pushover notificaion not working as expected.")
     sleep_till_tomorrow()
