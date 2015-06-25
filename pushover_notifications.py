@@ -15,7 +15,7 @@ except KeyError:
     push_over = False
 
 
-def make_pushover_call(message, title="Today's Packet Pub book."):
+def make_pushover_call(message, title="Today's Packet Pub book:"):
     if not push_over:
         return False
     data = {

@@ -97,6 +97,14 @@ def check_last_book():
         if not book_get:
             logging.log(logging.ERROR, "Error getting todays book!")
             return False
+        write_book_to_sql(todays_book)
+        check_book_or_retry(book_get)
+        logging.info("{0} grabbed on {1}.".format(title, date))
+        try:
+            pushover_notifications.make_pushover_call("'{0}'. Enjoy!".format(title))
+        except HTTPError:
+            logging.error("Pushover notificaion not working as expected.")
+        sleep_till_tomorrow()
     # This is where we should end up for everyday
     else:
         try:
@@ -107,15 +115,14 @@ def check_last_book():
         if not book_get:
             logging.error("Error getting todays book!")
             return False
-
-    write_book_to_sql(todays_book)
-    check_book_or_retry(book_get)
-    logging.info("{0} grabbed on {1}.".format(title, date))
-    try:
-        pushover_notifications.make_pushover_call("'{0}'. Enjoy!".format(title))
-    except HTTPError:
-        logging.error("Pushover notificaion not working as expected.")
-    sleep_till_tomorrow()
+        write_book_to_sql(todays_book)
+        check_book_or_retry(book_get)
+        logging.info("{0} grabbed on {1}.".format(title, date))
+        try:
+            pushover_notifications.make_pushover_call("'{0}'. Enjoy!".format(title))
+        except HTTPError:
+            logging.error("Pushover notificaion not working as expected.")
+        sleep_till_tomorrow()
 
 
 if __name__ == "__main__":
