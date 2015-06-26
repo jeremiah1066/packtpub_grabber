@@ -99,9 +99,9 @@ def check_last_book():
             return False
         write_book_to_sql(todays_book)
         check_book_or_retry(book_get)
-        logging.info("{0} grabbed on {1}.".format(title, date))
+        logging.info("{0} grabbed on {1}.".format(todays_book['title'], pickle.loads(date).ctime()))
         try:
-            pushover_notifications.make_pushover_call("'{0}'. Enjoy!".format(title))
+            pushover_notifications.make_pushover_call("'{0}'. Enjoy!".format(todays_book['title']))
         except HTTPError:
             logging.error("Pushover notificaion not working as expected.")
         sleep_till_tomorrow()
@@ -117,9 +117,9 @@ def check_last_book():
             return False
         write_book_to_sql(todays_book)
         check_book_or_retry(book_get)
-        logging.info("{0} grabbed on {1}.".format(title, date))
+        logging.info("{0} grabbed on {1}.".format(todays_book['title'], pickle.loads(date).ctime()))
         try:
-            pushover_notifications.make_pushover_call("'{0}'. Enjoy!".format(title))
+            pushover_notifications.make_pushover_call("'{0}'. Enjoy!".format(todays_book['title']))
         except HTTPError:
             logging.error("Pushover notificaion not working as expected.")
         sleep_till_tomorrow()
