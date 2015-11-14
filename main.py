@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.INFO,
 
 def get_tomorrow():
     return datetime.datetime.replace(datetime.datetime.utcnow() + datetime.timedelta(days=1),
-                                     hour=0, minute=0, second=0)
+                                     hour=0, minute=5, second=0)
 
 
 def sleep_till_tomorrow():
